@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import uuid
+
 import pytest
 
 rank_bm25 = pytest.importorskip("rank_bm25")
@@ -34,7 +36,8 @@ def test_store_returns_id():
     backend = _make_backend()
     doc_id = backend.store("hello world")
     assert isinstance(doc_id, str)
-    assert len(doc_id) == 32  # hex UUID
+    # Rust storage backends return canonical hyphenated UUIDs.
+    assert str(uuid.UUID(doc_id)) == doc_id
 
 
 # -- retrieve ---------------------------------------------------------------
